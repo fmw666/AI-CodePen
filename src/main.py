@@ -56,8 +56,7 @@ async def chatgpt(req: ChatGPTReq):
     if not OPEN_AI_KEY:
         return JSONResponse(status_code=500, content={"message": "OpenAI API Key is not set"})
     try:
-        completion = await asyncio.wait_for(run_chat_completion(req), timeout=5)
-        result = await asyncio.wait_for(completion, timeout=5)
+        result = await asyncio.wait_for(run_chat_completion(req), timeout=5)
         return result
     except asyncio.TimeoutError:
         return JSONResponse(status_code=408, content={"message": "Request Timeout"})
