@@ -14,8 +14,8 @@ from pydantic import BaseModel
 app = FastAPI()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-OPEN_AI_KEY = os.environ.get("OPENAI_API_KEY")
-openai.api_key = OPEN_AI_KEY
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+openai.api_key = OPENAI_API_KEY
 
 app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
 templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
@@ -55,7 +55,7 @@ async def chatgpt(req: ChatGPTReq):
         ]
     }
     """
-    if not OPEN_AI_KEY:
+    if not OPENAI_API_KEY:
         return JSONResponse(status_code=500, content={"message": "OpenAI API Key is not set"})
     try:
         result = await asyncio.wait_for(run_chat_completion(req), timeout=5)
