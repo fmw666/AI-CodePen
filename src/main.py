@@ -1,5 +1,4 @@
 import os
-import asyncio
 from typing import List
 
 import openai
@@ -14,7 +13,7 @@ from pydantic import BaseModel
 app = FastAPI()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 openai.api_key = OPENAI_API_KEY
 
 app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
@@ -29,18 +28,8 @@ async def read_root(request: Request):
 async def options_root(request: Request):
     return {"message": "Hello World"}
 
-
 class ChatGPTReq(BaseModel):
     messages: List
-
-
-async def run_chat_completion(req: ChatGPTReq):
-    completion = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=req.messages
-    )
-    return completion
-
 
 @app.post("/chatgpt")
 async def chatgpt(req: ChatGPTReq):
@@ -57,11 +46,14 @@ async def chatgpt(req: ChatGPTReq):
     """
     if not OPENAI_API_KEY:
         return JSONResponse(status_code=500, content={"message": "OpenAI API Key is not set"})
+
     try:
-        result = await asyncio.wait_for(run_chat_completion(req), timeout=5)
-        return result
-    except asyncio.TimeoutError:
-        return JSONResponse(status_code=408, content={"message": "Request Timeout"})
+        return openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=req.messages
+        )
+    except openai.error.APIError as e:
+        return JSONResponse(status_code=500, content={"message": f"OpenAI API Error: {e}"})
 
 
 if __name__ == "__main__":
