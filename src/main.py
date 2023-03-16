@@ -14,7 +14,7 @@ from pydantic import BaseModel
 app = FastAPI()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-OPEN_AI_KEY = os.environ.get("OPENAI_API_KEY", "")
+OPEN_AI_KEY = os.environ.get("OPENAI_API_KEY")
 openai.api_key = OPEN_AI_KEY
 
 app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
