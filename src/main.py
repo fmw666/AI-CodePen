@@ -13,7 +13,9 @@ from pydantic import BaseModel
 app = FastAPI()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+# OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+# OPENAI_API_KEY = "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"
+OPENAI_API_KEY = "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"
 openai.api_key = OPENAI_API_KEY
 
 app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
@@ -30,6 +32,8 @@ async def options_root(request: Request):
 
 class ChatGPTReq(BaseModel):
     messages: List
+    max_tokens: int = 3800
+    temperature: float = 0.7
 
 @app.post("/chatgpt")
 async def chatgpt(req: ChatGPTReq):
