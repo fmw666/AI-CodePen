@@ -15,7 +15,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 # openai.api_key = OPENAI_API_KEY
-openai.api_key = "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"
+openai.api_key = "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"
 
 app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
 templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
